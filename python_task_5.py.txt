@@ -1,0 +1,16 @@
+def multiply_matrix(input_df):
+    # Create a deep copy to avoid modifying the original DataFrame
+    modified_df = input_df.copy()
+
+    # Apply the specified logic for value modification
+    modified_df = modified_df.applymap(lambda x: x * 0.75 if x > 20 else x * 1.25)
+
+    # Round values to 1 decimal place
+    modified_df = modified_df.round(1)
+
+    return modified_df
+
+# Example usage
+# Assuming 'result_dataframe' is the DataFrame obtained from Question 1
+result_modified_matrix = multiply_matrix(result_dataframe)
+print(result_modified_matrix)

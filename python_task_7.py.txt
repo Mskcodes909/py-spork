@@ -1,0 +1,22 @@
+import pandas as pd
+
+def unroll_distance_matrix(input_df):
+    # Create a deep copy to avoid modifying the original DataFrame
+    unrolled_df = input_df.copy()
+
+    # Reset the index to convert multi-index to columns
+    unrolled_df = unrolled_df.reset_index()
+
+    # Melt the DataFrame to convert it to the desired format
+    unrolled_df = unrolled_df.melt(id_vars='id_1', var_name='id_2', value_name='distance')
+
+    # Rename the columns for consistency
+    unrolled_df = unrolled_df.rename(columns={'id_1': 'id_start', 'id_2': 'id_end'})
+
+    return unrolled_df
+
+# Example usage
+# Assuming 'result_dataframe' is the DataFrame obtained from Question 1
+result_unrolled_distance_matrix = unroll_distance_matrix(result_dataframe)
+print(result_unrolled_distance_matrix)
+ssss
