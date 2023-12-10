@@ -1,0 +1,22 @@
+import pandas as pd
+
+def get_type_count(dataset_path):
+    # Load dataset into a DataFrame
+    df = pd.read_csv(dataset_path)
+
+    # Add a new column 'car_type' based on the conditions
+    df['car_type'] = pd.cut(df['car'], bins=[-float('inf'), 15, 25, float('inf')],
+                            labels=['low', 'medium', 'high'], right=False)
+
+    # Calculate the count of occurrences for each car_type category
+    type_count = df['car_type'].value_counts().to_dict()
+
+    # Sort the dictionary alphabetically based on keys
+    sorted_type_count = dict(sorted(type_count.items()))
+
+    return sorted_type_count
+
+# Example usage
+dataset_path = 'dataset-1.csv'
+result_type_count = get_type_count(dataset_path)
+print(result_type_count)

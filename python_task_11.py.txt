@@ -1,0 +1,32 @@
+import pandas as pd
+import datetime
+
+def calculate_time_based_toll_rates(input_df):
+    # Create a deep copy to avoid modifying the original DataFrame
+    df_with_time_rates = input_df.copy()
+
+    # Define time ranges and corresponding rate coefficients for each vehicle type
+    time_ranges = [
+        {'start_time': datetime.time(0, 0), 'end_time': datetime.time(6, 0), 'rate_coefficients': {'moto': 0.7, 'car': 1.0, 'rv': 1.2, 'bus': 1.5, 'truck': 2.5}},
+        {'start_time': datetime.time(6, 0), 'end_time': datetime.time(12, 0), 'rate_coefficients': {'moto': 1.0, 'car': 1.2, 'rv': 1.5, 'bus': 2.0, 'truck': 3.0}},
+        {'start_time': datetime.time(12, 0), 'end_time': datetime.time(18, 0), 'rate_coefficients': {'moto': 1.2, 'car': 1.5, 'rv': 2.0, 'bus': 2.5, 'truck': 4.0}},
+        {'start_time': datetime.time(18, 0), 'end_time': datetime.time(23, 59, 59), 'rate_coefficients': {'moto': 1.0, 'car': 1.2, 'rv': 1.5, 'bus': 2.0, 'truck': 3.0}}
+    ]
+
+    # Iterate through time ranges and modify vehicle columns accordingly
+    for time_range in time_ranges:
+        mask = (df_with_time_rates['timestamp'].dt.time >= time_range['start_time']) & (df_with_time_rates['timestamp'].dt.time <= time_range['end_time'])
+        
+        for vehicle_type, rate_coefficient in time_range['rate_coefficients'].items():
+            column_name = f'{vehicle_type}_{time_range["start_time"].strftime("%H:%M")}_{time_range["end_time"].strftime("%H:%M")}'
+            df_with_time_rates[column_name] = df_with_time_rates[vehicle_type] * rate_coefficient * (mask.astype(int))
+
+    # Drop the original vehicle columns
+    df_with_time_rates = df_with_time_rates.drop(columns=['moto', 'car', 'rv', 'bus', 'truck'])
+
+    return df_with_time_rates
+
+# Example usage
+# Assuming 'result_with_toll_rate' is the DataFrame obtained from the previous step
+result_with_time_rates = calculate_time_based_toll_rates(result_with_toll_rate)
+print(result_with_time_rates)

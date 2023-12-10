@@ -1,0 +1,22 @@
+import pandas as pd
+
+def check_time_completeness(dataset_path):
+    # Load dataset into a DataFrame
+    df = pd.read_csv(dataset_path)
+
+    # Convert 'timestamp' column to datetime format
+    df['timestamp'] = pd.to_datetime(df['timestamp'])
+
+    # Extract day of the week and hour from timestamp
+    df['day_of_week'] = df['timestamp'].dt.dayofweek
+    df['hour'] = df['timestamp'].dt.hour
+
+    # Check if each (id, id_2) pair covers a full 24-hour period and spans all 7 days
+    completeness_check = df.groupby(['id', 'id_2']).apply(lambda x: (x['hour'].nunique() == 24) and (x['day_of_week'].nunique() == 7))
+
+    return completeness_check
+
+# Example usage
+dataset_path = 'dataset-2.csv'
+result_time_completeness = check_time_completeness(dataset_path)
+print(result_time_completeness)

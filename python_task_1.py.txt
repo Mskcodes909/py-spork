@@ -1,0 +1,26 @@
+import pandas as pd
+
+def generate_car_matrix(dataset_path):
+    # Load dataset into a DataFrame
+    df = pd.read_csv(dataset_path, index_col='id_1')
+
+    # Get unique values for id_2
+    id_2_values = df['id_2'].unique()
+
+    # Create an empty DataFrame with columns and index from id_2
+    result_df = pd.DataFrame(columns=id_2_values, index=id_2_values)
+
+    # Fill the DataFrame with values from the car column
+    for id_1 in id_2_values:
+        for id_2 in id_2_values:
+            if id_1 == id_2:
+                result_df.loc[id_1, id_2] = 0.0
+            else:
+                result_df.loc[id_1, id_2] = df.loc[(df['id_1'] == id_1) & (df['id_2'] == id_2), 'car'].values[0]
+
+    return result_df
+
+# Example usage
+dataset_path = 'dataset-1.csv'
+result_dataframe = generate_car_matrix(dataset_path)
+print(result_dataframe)

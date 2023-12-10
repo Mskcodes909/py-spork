@@ -1,0 +1,21 @@
+import pandas as pd
+
+def filter_routes(dataset_path):
+    # Load dataset into a DataFrame
+    df = pd.read_csv(dataset_path)
+
+    # Group by 'route' and calculate the average of 'truck' column for each route
+    route_avg_truck = df.groupby('route')['truck'].mean()
+
+    # Filter routes where the average of 'truck' column is greater than 7
+    selected_routes = route_avg_truck[route_avg_truck > 7].index.tolist()
+
+    # Sort the list of selected routes
+    selected_routes.sort()
+
+    return selected_routes
+
+# Example usage
+dataset_path = 'dataset-1.csv'
+result_filtered_routes = filter_routes(dataset_path)
+print(result_filtered_routes)
